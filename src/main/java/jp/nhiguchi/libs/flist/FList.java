@@ -42,7 +42,6 @@ public final class FList<E> implements List<E> {
 		/**
 		 * Very slow :-)
 		 *
-		 * @return
 		 */
 		public E previous() {
 			if (!hasPrevious()) throw new NoSuchElementException();
@@ -77,6 +76,8 @@ public final class FList<E> implements List<E> {
 			throw new UnsupportedOperationException("Immutable.");
 		}
 	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private static final FList EMPTY = new FList(null, null);
 	private final E fElem;
 	private final FList<E> fTail;
@@ -86,19 +87,29 @@ public final class FList<E> implements List<E> {
 		fTail = tail;
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public static <E> FList<E> flist(E elem, FList<? extends E> tail) {
+		return (FList<E>) new FList(elem, tail);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <E> FList<E> emptyList() {
+		return (FList<E>) EMPTY;
+	}
+
 	public static <E> FList<E> flist() {
-		return EMPTY;
+		return emptyList();
 	}
 
 	public static <E> FList<E> flist(E elem) {
-		return new FList(elem, EMPTY);
+		return flist(elem, emptyList());
 	}
 
 	public static <E> FList<E> flist(E... elems) {
-		FList<E> list = EMPTY;
+		FList<E> list = emptyList();
 
 		for (int i = elems.length - 1; i >= 0; --i) {
-			list = new FList(elems[i], list);
+			list = flist(elems[i], list);
 		}
 
 		return list;
@@ -114,7 +125,7 @@ public final class FList<E> implements List<E> {
 	}
 
 	public static <E> FList<E> cons(E elem, FList<? extends E> tail) {
-		return new FList(elem, tail);
+		return flist(elem, tail);
 	}
 
 	public E head() {
@@ -165,7 +176,7 @@ public final class FList<E> implements List<E> {
 
 	public FList<E> reverse() {
 		FList<E> cur = this;
-		FList<E> newList = EMPTY;
+		FList<E> newList = emptyList();
 
 		while (!cur.isEmpty()) {
 			newList = cons(cur.fElem, newList);
@@ -197,9 +208,7 @@ public final class FList<E> implements List<E> {
 		while (!cur.isEmpty()) {
 			E e = cur.fElem;
 
-			boolean eq = o == null ? e == null : o.equals(e);
-
-			if (eq)
+			if (Objects.equals(o, e))
 				return true;
 
 			cur = cur.fTail;
@@ -208,6 +217,7 @@ public final class FList<E> implements List<E> {
 		return false;
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public Iterator<E> iterator() {
 		return new ListIteratorImpl(this);
 	}
@@ -250,8 +260,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param e
-	 * @return
 	 */
 	public boolean add(E e) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -260,8 +268,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param o
-	 * @return
 	 */
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -278,8 +284,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param c
-	 * @return
 	 */
 	public boolean addAll(Collection<? extends E> c) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -288,9 +292,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param index
-	 * @param c
-	 * @return
 	 */
 	public boolean addAll(int index, Collection<? extends E> c) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -299,8 +300,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param c
-	 * @return
 	 */
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -309,8 +308,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param c
-	 * @return
 	 */
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -341,9 +338,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param index
-	 * @param element
-	 * @return
 	 */
 	public E set(int index, E element) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -352,8 +346,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param index
-	 * @param element
 	 */
 	public void add(int index, E element) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -362,8 +354,6 @@ public final class FList<E> implements List<E> {
 	/**
 	 * Unsupported.
 	 *
-	 * @param index
-	 * @return
 	 */
 	public E remove(int index) {
 		throw new UnsupportedOperationException("Immutable.");
@@ -373,10 +363,7 @@ public final class FList<E> implements List<E> {
 		int i = 0;
 
 		for (FList<E> cur = this; !cur.isEmpty(); cur = cur.fTail) {
-			E e = cur.fElem;
-
-			boolean eq = o == null ? e == null : o.equals(e);
-			if (eq) return i;
+			if (Objects.equals(o, cur.fElem)) return i;
 
 			++i;
 		}
@@ -389,10 +376,7 @@ public final class FList<E> implements List<E> {
 		int res = -1;
 
 		for (FList<E> cur = this; !cur.isEmpty(); cur = cur.fTail) {
-			E e = cur.fElem;
-
-			boolean eq = o == null ? e == null : o.equals(e);
-			if (eq) res = i;
+			if (Objects.equals(o, cur.fElem)) res = i;
 
 			++i;
 		}
@@ -400,6 +384,7 @@ public final class FList<E> implements List<E> {
 		return res;
 	}
 
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public ListIterator<E> listIterator() {
 		return new ListIteratorImpl(this);
 	}
@@ -422,7 +407,7 @@ public final class FList<E> implements List<E> {
 
 		while (it.nextIndex() < fromIndex) it.next();
 
-		LinkedList<E> list = new LinkedList<E>();
+		LinkedList<E> list = new LinkedList<>();
 		while (it.nextIndex() < toIndex) {
 			list.add(it.next());
 		}
@@ -433,7 +418,7 @@ public final class FList<E> implements List<E> {
 	public String toStringWithoutBrackets(String sep) {
 		StringBuilder sb = new StringBuilder();
 
-		FList cur = this;
+		FList<E> cur = this;
 		while (!cur.isEmpty()) {
 			if (sb.length() != 0) sb.append(sep);
 
@@ -461,7 +446,6 @@ public final class FList<E> implements List<E> {
 		if (obj == null) return false;
 		if (obj == this) return true;
 		if ((obj == EMPTY) ^ (this == EMPTY)) return false;
-		if ((obj == EMPTY) && (this == EMPTY)) return true;
 
 		if (!(obj instanceof List)) return false;
 
