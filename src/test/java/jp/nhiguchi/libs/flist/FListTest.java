@@ -1,10 +1,11 @@
 package jp.nhiguchi.libs.flist;
 
 import java.util.*;
-import org.junit.*;
+
+import org.junit.jupiter.api.*;
 
 import static jp.nhiguchi.libs.flist.FList.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -14,19 +15,19 @@ public class FListTest {
 	public FListTest() {
 	}
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() throws Exception {
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownClass() throws Exception {
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 	}
 
@@ -334,7 +335,7 @@ public class FListTest {
 		FList instance = flist("1st", "2nd", "3rd");
 		Object[] expResult = {"1st", "2nd", "3rd"};
 		Object[] result = instance.toArray();
-		assertEquals(expResult, result);
+		assertArrayEquals(expResult, result);
 	}
 
 	/**
@@ -347,7 +348,7 @@ public class FListTest {
 		FList<String> instance = flist("1st", "2nd", "3rd");
 		String[] expResult = {"1st", "2nd", "3rd"};
 		String[] result = instance.toArray(a);
-		assertEquals(expResult, result);
+		assertArrayEquals(expResult, result);
 	}
 
 	/**
