@@ -21,10 +21,12 @@ public final class FList<E> implements List<E> {
 			fIndex = 0;
 		}
 
+		@Override
 		public boolean hasNext() {
 			return !fCur.isEmpty();
 		}
 
+		@Override
 		public E next() {
 			if (fCur.isEmpty()) throw new NoSuchElementException();
 
@@ -35,6 +37,7 @@ public final class FList<E> implements List<E> {
 			return e;
 		}
 
+		@Override
 		public boolean hasPrevious() {
 			return fHead != fCur;
 		}
@@ -43,6 +46,7 @@ public final class FList<E> implements List<E> {
 		 * Very slow :-)
 		 *
 		 */
+		@Override
 		public E previous() {
 			if (!hasPrevious()) throw new NoSuchElementException();
 
@@ -56,22 +60,27 @@ public final class FList<E> implements List<E> {
 			return p.fElem;
 		}
 
+		@Override
 		public int nextIndex() {
 			return fIndex;
 		}
 
+		@Override
 		public int previousIndex() {
 			return fIndex - 1;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("Immutable.");
 		}
 
+		@Override
 		public void set(E e) {
 			throw new UnsupportedOperationException("Immutable.");
 		}
 
+		@Override
 		public void add(E e) {
 			throw new UnsupportedOperationException("Immutable.");
 		}
@@ -104,6 +113,7 @@ public final class FList<E> implements List<E> {
 		return flist(elem, emptyList());
 	}
 
+	@SafeVarargs
 	public static <E> FList<E> flist(E... elems) {
 		FList<E> list = emptyList();
 
@@ -187,6 +197,7 @@ public final class FList<E> implements List<E> {
 		return newList;
 	}
 
+	@Override
 	public int size() {
 		int n = 0;
 		FList<E> cur = this;
@@ -199,10 +210,12 @@ public final class FList<E> implements List<E> {
 		return n;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return this == EMPTY;
 	}
 
+	@Override
 	public boolean contains(Object o) {
 		FList<E> cur = this;
 
@@ -218,10 +231,12 @@ public final class FList<E> implements List<E> {
 		return false;
 	}
 
+	@Override
 	public Iterator<E> iterator() {
 		return new ListIteratorImpl<>(this);
 	}
 
+	@Override
 	public Object[] toArray() {
 		int n = size();
 
@@ -236,6 +251,7 @@ public final class FList<E> implements List<E> {
 		return res;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
 		int n = size();
@@ -262,6 +278,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public boolean add(E e) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -270,10 +287,12 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
 
+	@Override
 	public boolean containsAll(Collection<?> c) {
 		for (Object o : c) {
 			if (!contains(o)) return false;
@@ -286,6 +305,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public boolean addAll(Collection<? extends E> c) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -294,6 +314,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -302,6 +323,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -310,6 +332,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -318,10 +341,12 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public void clear() {
 		throw new UnsupportedOperationException("Immutable.");
 	}
 
+	@Override
 	public E get(int index) {
 		FList<E> cur = this;
 
@@ -340,6 +365,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public E set(int index, E element) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -348,6 +374,7 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public void add(int index, E element) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
@@ -356,10 +383,12 @@ public final class FList<E> implements List<E> {
 	 * Unsupported.
 	 *
 	 */
+	@Override
 	public E remove(int index) {
 		throw new UnsupportedOperationException("Immutable.");
 	}
 
+	@Override
 	public int indexOf(Object o) {
 		int i = 0;
 
@@ -372,6 +401,7 @@ public final class FList<E> implements List<E> {
 		return -1;
 	}
 
+	@Override
 	public int lastIndexOf(Object o) {
 		int i = 0;
 		int res = -1;
@@ -385,10 +415,12 @@ public final class FList<E> implements List<E> {
 		return res;
 	}
 
+	@Override
 	public ListIterator<E> listIterator() {
 		return new ListIteratorImpl<>(this);
 	}
 
+	@Override
 	public ListIterator<E> listIterator(int index) {
 		ListIterator<E> it = listIterator();
 
@@ -402,6 +434,9 @@ public final class FList<E> implements List<E> {
 		return it;
 	}
 
+	// Returns a copy, not a live view. Safe for an immutable list since neither
+	// the original nor the result can be mutated.
+	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
 		ListIterator<E> it = listIterator();
 

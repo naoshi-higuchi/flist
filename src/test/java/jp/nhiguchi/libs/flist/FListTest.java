@@ -2,7 +2,7 @@ package jp.nhiguchi.libs.flist;
 
 import java.util.*;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import static jp.nhiguchi.libs.flist.FList.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,25 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Naoshi Higuchi
  */
 public class FListTest {
-	public FListTest() {
-	}
-
-	@BeforeAll
-	public static void setUpClass() throws Exception {
-	}
-
-	@AfterAll
-	public static void tearDownClass() throws Exception {
-	}
-
-	@BeforeEach
-	public void setUp() {
-	}
-
-	@AfterEach
-	public void tearDown() {
-	}
-
 	/**
 	 * Test of flist method, of class FList.
 	 */
@@ -674,7 +655,7 @@ public class FListTest {
 		ListIterator<String> result = instance.listIterator();
 
 		for (int i = 0; i < 100; ++i) {
-			if (Math.random() % 2 == 0) {
+			if (Math.random() < 0.5) {
 				assertEquals(expResult.hasNext(), result.hasNext());
 				if (expResult.hasNext()) {
 					assertEquals(expResult.next(), result.next());
@@ -697,7 +678,6 @@ public class FListTest {
 	public void testListIterator_int() {
 		System.out.println("listIterator");
 		int index = 1;
-		System.out.println("listIterator");
 		FList<String> instance = flist("1st", "2nd", "3rd");
 		List<String> lst = new LinkedList<>();
 		lst.add("1st");
@@ -707,7 +687,7 @@ public class FListTest {
 		ListIterator<String> result = instance.listIterator(index);
 
 		for (int i = 0; i < 100; ++i) {
-			if (Math.random() % 2 == 0) {
+			if (Math.random() < 0.5) {
 				assertEquals(expResult.hasNext(), result.hasNext());
 				if (expResult.hasNext()) {
 					assertEquals(expResult.next(), result.next());
