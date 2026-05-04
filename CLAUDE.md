@@ -30,7 +30,7 @@ This is a single-class Java library (`jp.nhiguchi.libs.flist.FList<E>`) — an i
 
 Key design points:
 - **Structural sharing**: `cons(head, tail)` / `prepend` are O(1) and reuse the existing tail.
-- **Singleton empty list**: `EMPTY` is a static final sentinel; `isEmpty()` uses identity comparison (`this == EMPTY`).
+- **Singleton empty list**: `EMPTY` is a `FList<?>` static final sentinel; `isEmpty()` uses identity comparison (`this == EMPTY`).
 - **Mutation methods throw**: All mutating `List` methods (`add`, `remove`, `set`, `clear`, etc.) throw `UnsupportedOperationException`.
 - **`append` is O(n²)**: It rebuilds the list recursively; prefer `prepend` + `reverse` for batch construction.
 - **`previous()` on `ListIterator` is O(n)**: Walks from the head each time — noted intentionally in the source.
