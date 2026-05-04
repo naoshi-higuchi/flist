@@ -37,7 +37,7 @@ public class FListTest {
 	@Test
 	public void testFlist_0args() {
 		System.out.println("newFList");
-		FList result = FList.flist();
+		FList<?> result = FList.flist();
 		assertTrue(result.isEmpty());
 	}
 
@@ -47,7 +47,7 @@ public class FListTest {
 	@Test
 	public void testFlist_Collection() {
 		System.out.println("newFList");
-		Collection<String> c = new LinkedList<String>();
+		Collection<String> c = new LinkedList<>();
 		c.add("1st");
 		c.add("2nd");
 		c.add("3rd");
@@ -215,7 +215,7 @@ public class FListTest {
 	@Test
 	public void testSize() {
 		System.out.println("size");
-		FList instance;
+		FList<String> instance;
 		int expResult;
 		int result;
 
@@ -229,7 +229,7 @@ public class FListTest {
 		result = instance.size();
 		assertEquals(expResult, result);
 
-		instance = flist((Object) null);
+		instance = flist((String) null);
 		expResult = 1;
 		result = instance.size();
 		assertEquals(expResult, result);
@@ -251,7 +251,7 @@ public class FListTest {
 	@Test
 	public void testIsEmpty() {
 		System.out.println("isEmpty");
-		FList instance;
+		FList<String> instance;
 		boolean expResult;
 		boolean result;
 
@@ -265,7 +265,7 @@ public class FListTest {
 		result = instance.isEmpty();
 		assertEquals(expResult, result);
 
-		instance = flist((Object) null);
+		instance = flist((String) null);
 		expResult = false;
 		result = instance.isEmpty();
 		assertEquals(expResult, result);
@@ -282,8 +282,8 @@ public class FListTest {
 	@Test
 	public void testContains() {
 		System.out.println("contains");
-		Object o;
-		FList instance = flist("1st", "2nd", "3rd");
+		String o;
+		FList<String> instance = flist("1st", "2nd", "3rd");
 		boolean expResult;
 		boolean result;
 
@@ -314,8 +314,8 @@ public class FListTest {
 	@Test
 	public void testIterator() {
 		System.out.println("iterator");
-		FList instance = flist("1st", "2nd", "3rd");
-		Iterator result = instance.iterator();
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		Iterator<String> result = instance.iterator();
 
 		assertTrue(result.hasNext());
 		assertEquals("1st", result.next());
@@ -332,7 +332,7 @@ public class FListTest {
 	@Test
 	public void testToArray_0args() {
 		System.out.println("toArray");
-		FList instance = flist("1st", "2nd", "3rd");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 		Object[] expResult = {"1st", "2nd", "3rd"};
 		Object[] result = instance.toArray();
 		assertArrayEquals(expResult, result);
@@ -357,8 +357,8 @@ public class FListTest {
 	@Test
 	public void testAdd_GenericType() {
 		System.out.println("add");
-		Object e = "something";
-		FList instance = flist();
+		String e = "something";
+		FList<String> instance = flist();
 
 		try {
 			instance.add(e);
@@ -374,8 +374,8 @@ public class FListTest {
 	@Test
 	public void testRemove_Object() {
 		System.out.println("remove");
-		Object e = "2nd";
-		FList instance = flist("1st", "2nd", "3rd");
+		String e = "2nd";
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.remove(e);
@@ -391,8 +391,8 @@ public class FListTest {
 	@Test
 	public void testContainsAll() {
 		System.out.println("containsAll");
-		Collection<?> c;
-		FList instance = flist("1st", "2nd", "3rd");
+		Collection<String> c;
+		FList<String> instance = flist("1st", "2nd", "3rd");
 		boolean expResult;
 		boolean result;
 
@@ -423,8 +423,8 @@ public class FListTest {
 	@Test
 	public void testAddAll_Collection() {
 		System.out.println("addAll");
-		Collection c = Arrays.asList("4th", "5th", "6th");
-		FList instance = flist("1st", "2nd", "3rd");
+		Collection<String> c = Arrays.asList("4th", "5th", "6th");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.addAll(c);
@@ -441,8 +441,8 @@ public class FListTest {
 	public void testAddAll_int_Collection() {
 		System.out.println("addAll");
 		int index = 1;
-		Collection c = Arrays.asList("1.5", "1.6");
-		FList instance = flist("1st", "2nd", "3rd");
+		Collection<String> c = Arrays.asList("1.5", "1.6");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.addAll(index, c);
@@ -458,8 +458,8 @@ public class FListTest {
 	@Test
 	public void testRemoveAll() {
 		System.out.println("removeAll");
-		Collection c = Arrays.asList("1st", "2nd");
-		FList instance = flist("1st", "2nd", "3rd");
+		Collection<String> c = Arrays.asList("1st", "2nd");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.removeAll(c);
@@ -475,8 +475,8 @@ public class FListTest {
 	@Test
 	public void testRetainAll() {
 		System.out.println("retainAll");
-		Collection c = Arrays.asList("1st", "2nd");
-		FList instance = flist("1st", "2nd", "3rd");
+		Collection<String> c = Arrays.asList("1st", "2nd");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.retainAll(c);
@@ -492,7 +492,7 @@ public class FListTest {
 	@Test
 	public void testClear() {
 		System.out.println("clear");
-		FList instance = flist("1st", "2nd", "3rd");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.clear();
@@ -509,9 +509,9 @@ public class FListTest {
 	public void testGet() {
 		System.out.println("get");
 		int index;
-		FList instance = flist("1st", "2nd", "3rd");
-		Object expResult;
-		Object result;
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		String expResult;
+		String result;
 
 		index = 0;
 		expResult = "1st";
@@ -551,8 +551,8 @@ public class FListTest {
 	@Test
 	public void testSet() {
 		System.out.println("set");
-		Object e = "something";
-		FList instance = flist();
+		String e = "something";
+		FList<String> instance = flist();
 
 		try {
 			instance.set(0, e);
@@ -569,8 +569,8 @@ public class FListTest {
 	public void testAdd_int_GenericType() {
 		System.out.println("add");
 		int index = 0;
-		Object e = "something";
-		FList instance = flist();
+		String e = "something";
+		FList<String> instance = flist();
 
 		try {
 			instance.add(index, e);
@@ -587,7 +587,7 @@ public class FListTest {
 	public void testRemove_int() {
 		System.out.println("remove");
 		int index = 0;
-		FList instance = flist("1st", "2nd", "3rd");
+		FList<String> instance = flist("1st", "2nd", "3rd");
 
 		try {
 			instance.remove(index);
@@ -603,8 +603,8 @@ public class FListTest {
 	@Test
 	public void testIndexOf() {
 		System.out.println("indexOf");
-		Object o;
-		FList instance = flist("1st", "2nd", "3rd");
+		String o;
+		FList<String> instance = flist("1st", "2nd", "3rd");
 		int expResult;
 		int result;
 
@@ -635,8 +635,8 @@ public class FListTest {
 	@Test
 	public void testLastIndexOf() {
 		System.out.println("lastIndexOf");
-		Object o;
-		FList instance;
+		String o;
+		FList<String> instance;
 		int expResult;
 		int result;
 
@@ -665,13 +665,13 @@ public class FListTest {
 	@Test
 	public void testListIterator_0args() {
 		System.out.println("listIterator");
-		FList instance = flist("1st", "2nd", "3rd");
-		List lst = new LinkedList();
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		List<String> lst = new LinkedList<>();
 		lst.add("1st");
 		lst.add("2nd");
 		lst.add("3rd");
-		ListIterator expResult = lst.listIterator();
-		ListIterator result = instance.listIterator();
+		ListIterator<String> expResult = lst.listIterator();
+		ListIterator<String> result = instance.listIterator();
 
 		for (int i = 0; i < 100; ++i) {
 			if (Math.random() % 2 == 0) {
@@ -698,13 +698,13 @@ public class FListTest {
 		System.out.println("listIterator");
 		int index = 1;
 		System.out.println("listIterator");
-		FList instance = flist("1st", "2nd", "3rd");
-		List lst = new LinkedList();
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		List<String> lst = new LinkedList<>();
 		lst.add("1st");
 		lst.add("2nd");
 		lst.add("3rd");
-		ListIterator expResult = lst.listIterator(index);
-		ListIterator result = instance.listIterator(index);
+		ListIterator<String> expResult = lst.listIterator(index);
+		ListIterator<String> result = instance.listIterator(index);
 
 		for (int i = 0; i < 100; ++i) {
 			if (Math.random() % 2 == 0) {
@@ -731,9 +731,9 @@ public class FListTest {
 		System.out.println("subList");
 		int fromIndex = 1;
 		int toIndex = 3;
-		FList instance = flist("1st", "2nd", "3rd", "4th");
-		List expResult = flist("2nd", "3rd");
-		List result = instance.subList(fromIndex, toIndex);
+		FList<String> instance = flist("1st", "2nd", "3rd", "4th");
+		List<String> expResult = flist("2nd", "3rd");
+		List<String> result = instance.subList(fromIndex, toIndex);
 		assertEquals(expResult, result);
 	}
 

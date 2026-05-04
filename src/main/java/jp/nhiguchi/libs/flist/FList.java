@@ -77,8 +77,7 @@ public final class FList<E> implements List<E> {
 		}
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private static final FList EMPTY = new FList(null, null);
+	private static final FList<?> EMPTY = new FList<>(null, null);
 	private final E fElem;
 	private final FList<E> fTail;
 
@@ -87,9 +86,9 @@ public final class FList<E> implements List<E> {
 		fTail = tail;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings("unchecked")
 	public static <E> FList<E> flist(E elem, FList<? extends E> tail) {
-		return (FList<E>) new FList(elem, tail);
+		return new FList<>(elem, (FList<E>) tail);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -115,8 +114,9 @@ public final class FList<E> implements List<E> {
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <E> FList<E> flist(Collection<? extends E> c) {
-		if (c instanceof FList) return (FList) c;
+		if (c instanceof FList<?> fl) return (FList<E>) fl;
 
 		if (c.isEmpty()) return flist();
 
@@ -160,13 +160,14 @@ public final class FList<E> implements List<E> {
 		return cons(elem, this);
 	}
 
+	@SuppressWarnings("unchecked")
 	public FList<E> prepend(Collection<? extends E> c) {
 		FList<E> tmp;
 
 		if (c.isEmpty()) return this;
 
-		if (c instanceof FList) {
-			tmp = (FList) c;
+		if (c instanceof FList<?> fl) {
+			tmp = (FList<E>) fl;
 		} else {
 			tmp = flist(c);
 		}
@@ -217,9 +218,8 @@ public final class FList<E> implements List<E> {
 		return false;
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	public Iterator<E> iterator() {
-		return new ListIteratorImpl(this);
+		return new ListIteratorImpl<>(this);
 	}
 
 	public Object[] toArray() {
@@ -236,6 +236,7 @@ public final class FList<E> implements List<E> {
 		return res;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
 		int n = size();
 
@@ -384,9 +385,8 @@ public final class FList<E> implements List<E> {
 		return res;
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	public ListIterator<E> listIterator() {
-		return new ListIteratorImpl(this);
+		return new ListIteratorImpl<>(this);
 	}
 
 	public ListIterator<E> listIterator(int index) {
@@ -447,11 +447,9 @@ public final class FList<E> implements List<E> {
 		if (obj == this) return true;
 		if ((obj == EMPTY) ^ (this == EMPTY)) return false;
 
-		if (!(obj instanceof List)) return false;
+		if (!(obj instanceof List<?> rhs)) return false;
 
-		List rhs = (List) obj;
-
-		Iterator it = rhs.iterator();
+		Iterator<?> it = rhs.iterator();
 		for (E e : this) {
 			if (!it.hasNext()) return false;
 			Object o = it.next();
@@ -462,9 +460,7 @@ public final class FList<E> implements List<E> {
 			if (!e.equals(o)) return false;
 		}
 
-		if (it.hasNext()) return false;
-
-		return true;
+		return !it.hasNext();
 	}
 
 	@Override
