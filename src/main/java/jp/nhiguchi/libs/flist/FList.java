@@ -271,6 +271,8 @@ public final class FList<E> implements List<E> {
 			cur = cur.fTail;
 		}
 
+		if (a.length > n) a[n] = null;
+
 		return a;
 	}
 
@@ -438,12 +440,14 @@ public final class FList<E> implements List<E> {
 	// the original nor the result can be mutated.
 	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
-		ListIterator<E> it = listIterator();
+		if (fromIndex > toIndex) throw new IllegalArgumentException();
 
-		while (it.nextIndex() < fromIndex) it.next();
+		// listIterator(fromIndex) validates fromIndex >= 0 and <= size
+		ListIterator<E> it = listIterator(fromIndex);
 
 		LinkedList<E> list = new LinkedList<>();
 		while (it.nextIndex() < toIndex) {
+			if (!it.hasNext()) throw new IndexOutOfBoundsException();
 			list.add(it.next());
 		}
 

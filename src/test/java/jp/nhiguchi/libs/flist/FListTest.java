@@ -38,6 +38,17 @@ public class FListTest {
 		assertEquals(expResult, result);
 	}
 
+	@Test
+	public void testFlist_Collection_alreadyFList() {
+		FList<String> original = flist("1st", "2nd", "3rd");
+		assertSame(original, FList.flist(original));
+	}
+
+	@Test
+	public void testFlist_Collection_empty() {
+		assertTrue(FList.flist(Collections.emptyList()).isEmpty());
+	}
+
 	/**
 	 * Test of cons method, of class FList.
 	 */
@@ -137,6 +148,12 @@ public class FListTest {
 		assertEquals(expResult, result);
 	}
 
+	@Test
+	public void testAppend_onEmptyList() {
+		assertEquals(flist("1st"), flist().append("1st"));
+		assertEquals(flist("1st", "2nd"), flist().append(Arrays.asList("1st", "2nd")));
+	}
+
 	/**
 	 * Test of prepend method, of class FList.
 	 */
@@ -153,6 +170,11 @@ public class FListTest {
 		assertEquals(expResult, result);
 	}
 
+	@Test
+	public void testPrepend_onEmptyList() {
+		assertEquals(flist("1st"), flist().prepend("1st"));
+	}
+
 	/**
 	 * Test of prepend method, of class FList.
 	 */
@@ -167,6 +189,19 @@ public class FListTest {
 		expResult = flist("1st", "2nd", "3rd", "4th", "5th", "6th");
 		result = instance.prepend(flist("1st", "2nd", "3rd"));
 		assertEquals(expResult, result);
+	}
+
+	@Test
+	public void testPrepend_Collection_nonFList() {
+		assertEquals(
+			flist("1st", "2nd", "3rd", "4th", "5th"),
+			flist("4th", "5th").prepend(Arrays.asList("1st", "2nd", "3rd")));
+	}
+
+	@Test
+	public void testPrepend_Collection_empty() {
+		FList<String> instance = flist("1st", "2nd");
+		assertSame(instance, instance.prepend(Collections.emptyList()));
 	}
 
 	/**
@@ -289,6 +324,13 @@ public class FListTest {
 		assertEquals(expResult, result);
 	}
 
+	@Test
+	public void testContains_null() {
+		assertTrue(flist("1st", null, "3rd").contains(null));
+		assertFalse(flist("1st", "2nd").contains(null));
+		assertFalse(flist().contains(null));
+	}
+
 	/**
 	 * Test of iterator method, of class FList.
 	 */
@@ -305,6 +347,11 @@ public class FListTest {
 		assertTrue(result.hasNext());
 		assertEquals("3rd", result.next());
 		assertFalse(result.hasNext());
+	}
+
+	@Test
+	public void testIterator_next_exhausted() {
+		assertThrows(NoSuchElementException.class, flist().iterator()::next);
 	}
 
 	/**
@@ -330,6 +377,30 @@ public class FListTest {
 		String[] expResult = {"1st", "2nd", "3rd"};
 		String[] result = instance.toArray(a);
 		assertArrayEquals(expResult, result);
+	}
+
+	@Test
+	public void testToArray_GenericType_LargerArray() {
+		String[] a = new String[5];
+		a[3] = "sentinel";
+		a[4] = "sentinel";
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		String[] result = instance.toArray(a);
+		assertSame(a, result);
+		assertEquals("1st", result[0]);
+		assertEquals("2nd", result[1]);
+		assertEquals("3rd", result[2]);
+		assertNull(result[3]);
+		assertEquals("sentinel", result[4]);
+	}
+
+	@Test
+	public void testToArray_GenericType_SmallerArray() {
+		String[] a = new String[1];
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		String[] result = instance.toArray(a);
+		assertNotSame(a, result);
+		assertArrayEquals(new String[]{"1st", "2nd", "3rd"}, result);
 	}
 
 	/**
@@ -396,6 +467,12 @@ public class FListTest {
 		expResult = false;
 		result = instance.containsAll(c);
 		assertEquals(expResult, result);
+	}
+
+	@Test
+	public void testContainsAll_emptyCollection() {
+		assertTrue(flist("1st", "2nd").containsAll(Collections.emptyList()));
+		assertTrue(flist().containsAll(Collections.emptyList()));
 	}
 
 	/**
@@ -610,6 +687,12 @@ public class FListTest {
 		assertEquals(expResult, result);
 	}
 
+	@Test
+	public void testIndexOf_null() {
+		assertEquals(1, flist("1st", null, "3rd").indexOf(null));
+		assertEquals(-1, flist("1st", "2nd").indexOf(null));
+	}
+
 	/**
 	 * Test of lastIndexOf method, of class FList.
 	 */
@@ -638,6 +721,12 @@ public class FListTest {
 		expResult = -1;
 		result = instance.lastIndexOf(o);
 		assertEquals(expResult, result);
+	}
+
+	@Test
+	public void testLastIndexOf_null() {
+		assertEquals(2, flist("1st", null, null).lastIndexOf(null));
+		assertEquals(-1, flist("1st", "2nd").lastIndexOf(null));
 	}
 
 	/**
@@ -669,6 +758,26 @@ public class FListTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	public void testListIterator_mutationThrows() {
+		ListIterator<String> it = flist("1st").listIterator();
+		assertThrows(UnsupportedOperationException.class, it::remove);
+		assertThrows(UnsupportedOperationException.class, () -> it.set("x"));
+		assertThrows(UnsupportedOperationException.class, () -> it.add("x"));
+	}
+
+	@Test
+	public void testListIterator_next_exhausted() {
+		ListIterator<String> it = flist("1st").listIterator();
+		it.next();
+		assertThrows(NoSuchElementException.class, it::next);
+	}
+
+	@Test
+	public void testListIterator_previous_atStart() {
+		assertThrows(NoSuchElementException.class, flist("1st").listIterator()::previous);
 	}
 
 	/**
@@ -703,6 +812,13 @@ public class FListTest {
 		}
 	}
 
+	@Test
+	public void testListIterator_int_invalidIndex() {
+		FList<String> instance = flist("1st", "2nd");
+		assertThrows(IndexOutOfBoundsException.class, () -> instance.listIterator(-1));
+		assertThrows(IndexOutOfBoundsException.class, () -> instance.listIterator(3));
+	}
+
 	/**
 	 * Test of subList method, of class FList.
 	 */
@@ -715,6 +831,22 @@ public class FListTest {
 		List<String> expResult = flist("2nd", "3rd");
 		List<String> result = instance.subList(fromIndex, toIndex);
 		assertEquals(expResult, result);
+	}
+
+	@Test
+	public void testSubList_edgeCases() {
+		FList<String> instance = flist("1st", "2nd", "3rd");
+		assertEquals(flist(), instance.subList(1, 1));
+		assertEquals(flist("1st", "2nd"), instance.subList(0, 2));
+		assertEquals(flist("2nd", "3rd"), instance.subList(1, 3));
+	}
+
+	@Test
+	public void testSubList_invalidRange() {
+		FList<String> instance = flist("1st", "2nd");
+		assertThrows(IndexOutOfBoundsException.class, () -> instance.subList(-1, 1));
+		assertThrows(IndexOutOfBoundsException.class, () -> instance.subList(0, 3));
+		assertThrows(IllegalArgumentException.class, () -> instance.subList(2, 1));
 	}
 
 	/**
@@ -771,6 +903,49 @@ public class FListTest {
 		expResult = false;
 		result = instance.equals(flist((String) null));
 		assertEquals(expResult, result);
+	}
+
+	@Test
+	public void testEquals_null() {
+		assertFalse(flist("1st").equals(null));
+		assertFalse(flist().equals(null));
+	}
+
+	@Test
+	public void testEquals_self() {
+		FList<String> instance = flist("1st", "2nd");
+		assertTrue(instance.equals(instance));
+	}
+
+	@Test
+	public void testEquals_nonList() {
+		assertFalse(flist("1st").equals("not a list"));
+		assertFalse(flist().equals(42));
+	}
+
+	@Test
+	public void testEquals_crossType() {
+		assertTrue(flist("1st", "2nd", "3rd").equals(Arrays.asList("1st", "2nd", "3rd")));
+		assertFalse(flist("1st", "2nd").equals(Arrays.asList("1st", "2nd", "3rd")));
+	}
+
+	@Test
+	public void testHashCode() {
+		// Deterministic for same content
+		assertEquals(flist("1st", "2nd").hashCode(), flist("1st", "2nd").hashCode());
+		assertEquals(flist().hashCode(), flist().hashCode());
+		// Null elements
+		assertEquals(flist((String) null).hashCode(), flist((String) null).hashCode());
+		// List contract: equal lists must have equal hashCodes across implementations
+		assertEquals(Arrays.asList("1st", "2nd").hashCode(), flist("1st", "2nd").hashCode());
+		assertEquals(Arrays.asList().hashCode(), flist().hashCode());
+	}
+
+	@Test
+	public void testToStringWithoutBrackets_sep() {
+		assertEquals("1st-2nd-3rd", flist("1st", "2nd", "3rd").toStringWithoutBrackets("-"));
+		assertEquals("only", flist("only").toStringWithoutBrackets("-"));
+		assertEquals("", flist().toStringWithoutBrackets("-"));
 	}
 
 	/**
